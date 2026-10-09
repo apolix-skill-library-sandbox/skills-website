@@ -14,6 +14,8 @@ A catalog of every Claude skill in the [apolix-skill-library-sandbox](https://gi
 
 `.github/workflows/deploy.yml` builds the site and deploys it to the Azure Static Web App **ApolixInternalHub** (resource group *Internal*) on every push, every 30 minutes, and on demand. It needs the repo secret `AZURE_STATIC_WEB_APPS_API_TOKEN` (the Static Web App's deployment token).
 
+Only Apolix accounts can open it: `staticwebapp.config.json` requires sign-in through the single-tenant Entra app *Apolix Skill Library (ApolixInternalHub)*, whose client ID and secret are the Static Web App settings `AAD_CLIENT_ID` and `AAD_CLIENT_SECRET`. The secret expires after a year; renew it with `az ad app credential reset`.
+
 ## Adding a skill
 
 Add a folder to your department's repo, following the convention in the [claude-skill-library README](https://github.com/apolix-skill-library-sandbox/claude-skill-library#naming-convention). It appears on the site after the next build. Add an `icon.svg` or `icon.png` to the folder for a custom icon; otherwise the site shows the skill's initials.

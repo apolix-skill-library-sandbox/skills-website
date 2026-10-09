@@ -196,6 +196,8 @@ def render(skills):
     for asset in ("style.css", "favicon.png"):
         shutil.copy(ROOT / asset, DIST / asset)
         versions[asset] = hashlib.sha256((ROOT / asset).read_bytes()).hexdigest()[:8]
+    # Azure Static Web Apps: Apolix-only sign-in (ignored by the local server)
+    shutil.copy(ROOT / "staticwebapp.config.json", DIST / "staticwebapp.config.json")
     for name, page in pages.items():
         page = page.replace("{{ORG}}", html.escape(ORG))
         for asset, version in versions.items():
