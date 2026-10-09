@@ -32,7 +32,6 @@ To skip step 1 for everyone, an org owner can provision the skills org-wide unde
 Python 3.9+ with no dependencies.
 
 ```bash
-python3 build.py --local fixtures      # demo data
 python3 build.py --local ../skills     # local clones, one folder per repo
 GITHUB_TOKEN=$(gh auth token) python3 build.py   # live from GitHub
 python3 -m http.server 8765 --directory dist
