@@ -6,7 +6,9 @@ A catalog of every Claude skill in the [apolix-skill-library-sandbox](https://gi
 
 `build.py` scans every public repo in the org for top-level `<skill>/SKILL.md` folders, reads the `name` and `description` frontmatter, and writes a static site to `dist/`:
 
-- `index.html`: the catalog with search and department filters
+- `index.html`: the catalog with search and department filters (from `template.html`)
+- `contribute.html`: how to add a skill and how leads review it
+- `style.css`: shared styles for both pages
 - `zips/<skill>.zip`: the skill packaged for upload to claude.ai
 - `skills.json`: the same data, machine-readable
 

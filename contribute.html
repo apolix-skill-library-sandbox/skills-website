@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contribute a Skill</title>
+<meta name="description" content="How to add or change a Claude skill, and how department leads review it.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23c4623f'/><path d='M16 7l2.4 6.6L25 16l-6.6 2.4L16 25l-2.4-6.6L7 16l6.6-2.4z' fill='white'/></svg>">
+<link rel="stylesheet" href="style.css">
+<style>
+  .flow .lane { fill: var(--chip); }
+  .flow .lane-label { fill: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .flow .box { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; }
+  .flow .box.auto { stroke-dasharray: 5 4; }
+  .flow .box.accent { stroke: var(--accent); }
+  .flow .title { fill: var(--text); font-size: 14px; font-weight: 600; }
+  .flow .sub { fill: var(--muted); font-size: 12px; }
+  .flow .edge { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+  .flow .edge.ok { stroke: var(--ok); }
+  .flow .edge.warn { stroke: var(--warn); }
+  .flow .edge-label { font-size: 12px; font-weight: 600; }
+  .flow .edge-label.ok { fill: var(--ok); }
+  .flow .edge-label.warn { fill: var(--warn); }
+  .flow .diamond { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; }
+  .figure .scroll { overflow-x: auto; }
+  .figure .scroll svg { min-width: 640px; }
+</style>
+</head>
+<body>
+<header class="wrap">
+  <nav class="nav"><a href="./">Skills</a><a href="contribute.html" aria-current="page">How to contribute</a></nav>
+  <h1>Contribute a skill</h1>
+  <p class="lede">Anyone in a department can add or improve that department's skills. A lead from the same department reviews every change before it goes live.</p>
+</header>
+
+<main class="wrap doc">
+  <ul class="toc">
+    <li><a href="#roles">Who does what</a></li>
+    <li><a href="#flow">The review flow</a></li>
+    <li><a href="#browser">Add a skill in the browser</a></li>
+    <li><a href="#claude-code">Add a skill with Claude Code</a></li>
+    <li><a href="#good-skill">Writing a good skill</a></li>
+    <li><a href="#leads">For leads: reviewing</a></li>
+  </ul>
+
+  <h2 id="roles">Who does what</h2>
+  <p>Every department has two GitHub teams in the <a href="https://github.com/{{ORG}}">{{ORG}}</a> organization: one for everyone in the department, and a smaller <em>leads</em> team that approves changes.</p>
+  <div class="roles">
+    <div class="role">
+      <h3>Team member</h3>
+      <p>Writes new skills and improves existing ones on a branch, then opens a pull request.</p>
+    </div>
+    <div class="role">
+      <h3>Department lead</h3>
+      <p>Is asked to review automatically, gives feedback, approves and merges.</p>
+    </div>
+    <div class="role">
+      <h3>Management leads &amp; admin</h3>
+      <p>Own the review rules themselves (the <code>.github/</code> folder) and the shared library.</p>
+    </div>
+  </div>
+
+  <table class="teams">
+    <thead><tr><th>Department</th><th>Repository</th><th>Members</th><th>Reviewers</th></tr></thead>
+    <tbody>
+      <tr><td>Finance</td><td><a href="https://github.com/{{ORG}}/skills-finance">skills-finance</a></td><td><code>finance</code></td><td><code>finance-leads</code></td></tr>
+      <tr><td>HR</td><td><a href="https://github.com/{{ORG}}/skills-hr">skills-hr</a></td><td><code>hr</code></td><td><code>hr-leads</code></td></tr>
+      <tr><td>Management</td><td><a href="https://github.com/{{ORG}}/skills-management">skills-management</a></td><td><code>management</code></td><td><code>management-leads</code></td></tr>
+      <tr><td>Office</td><td><a href="https://github.com/{{ORG}}/skills-office">skills-office</a></td><td><code>office</code></td><td><code>office-leads</code></td></tr>
+      <tr><td>Operations</td><td><a href="https://github.com/{{ORG}}/skills-operations">skills-operations</a></td><td><code>operations</code></td><td><code>operations-lead</code></td></tr>
+      <tr><td>Sales</td><td><a href="https://github.com/{{ORG}}/skills-sales">skills-sales</a></td><td><code>sales</code></td><td><code>sales-leads</code></td></tr>
+      <tr><td>Shared</td><td><a href="https://github.com/{{ORG}}/claude-skill-library">claude-skill-library</a></td><td>all departments</td><td><code>admin</code></td></tr>
+    </tbody>
+  </table>
+  <p class="muted">Not in a team yet? Ask your department lead or an admin to add you.</p>
+
+  <h2 id="flow">The review flow</h2>
+  <p>Nobody can change <code>main</code> directly. Every change goes through a pull request that a lead of that department approves.</p>
+
+  <figure class="figure">
+    <div class="scroll">
+    <svg class="flow" viewBox="0 0 820 300" role="img" aria-labelledby="flow-title flow-desc">
+      <title id="flow-title">Skill review flow</title>
+      <desc id="flow-desc">A team member adds a skill on a branch and opens a pull request. The department lead is requested automatically and reviews it. If changes are requested, the member pushes fixes and the lead reviews again. Once approved, the lead merges to main and the website updates automatically.</desc>
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill: var(--muted)"/></marker>
+        <marker id="arr-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill: var(--ok)"/></marker>
+        <marker id="arr-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill: var(--warn)"/></marker>
+      </defs>
+
+      <rect class="lane" x="0" y="0" width="820" height="136" rx="10"/>
+      <text class="lane-label" x="16" y="26">Team member</text>
+      <rect class="lane" x="0" y="150" width="820" height="150" rx="10"/>
+      <text class="lane-label" x="16" y="176">Department lead</text>
+
+      <!-- 1 -->
+      <rect class="box" x="24" y="48" width="160" height="62" rx="10"/>
+      <text class="title" x="104" y="74" text-anchor="middle">1 · Add skill</text>
+      <text class="sub" x="104" y="94" text-anchor="middle">on a new branch</text>
+      <!-- 2 -->
+      <rect class="box" x="214" y="48" width="160" height="62" rx="10"/>
+      <text class="title" x="294" y="74" text-anchor="middle">2 · Pull request</text>
+      <text class="sub" x="294" y="94" text-anchor="middle">into main</text>
+      <!-- fixes -->
+      <rect class="box" x="414" y="48" width="160" height="62" rx="10"/>
+      <text class="title" x="494" y="74" text-anchor="middle">Push fixes</text>
+      <text class="sub" x="494" y="94" text-anchor="middle">to the same branch</text>
+
+      <!-- 3 -->
+      <rect class="box" x="214" y="204" width="160" height="62" rx="10"/>
+      <text class="title" x="294" y="230" text-anchor="middle">3 · Review</text>
+      <text class="sub" x="294" y="250" text-anchor="middle">requested automatically</text>
+      <!-- decision -->
+      <path class="diamond" d="M494 197 L554 235 L494 273 L434 235 Z"/>
+      <text class="title" x="494" y="240" text-anchor="middle">OK?</text>
+      <!-- 4 -->
+      <rect class="box accent" x="618" y="204" width="100" height="62" rx="10"/>
+      <text class="title" x="668" y="230" text-anchor="middle">4 · Merge</text>
+      <text class="sub" x="668" y="250" text-anchor="middle">into main</text>
+      <!-- 5 -->
+      <rect class="box auto" x="594" y="48" width="200" height="62" rx="10"/>
+      <text class="title" x="694" y="74" text-anchor="middle">5 · Live on this site</text>
+      <text class="sub" x="694" y="94" text-anchor="middle">automatic, within 30 min</text>
+
+      <!-- edges -->
+      <path class="edge" d="M184 79 H212" marker-end="url(#arr)"/>
+      <path class="edge" d="M294 110 V202" marker-end="url(#arr)"/>
+      <path class="edge" d="M374 235 H432" marker-end="url(#arr)"/>
+      <path class="edge warn" d="M494 197 V112" marker-end="url(#arr-warn)"/>
+      <text class="edge-label warn" x="504" y="160">changes requested</text>
+      <path class="edge warn" d="M440 110 V142 H350 V202" marker-end="url(#arr-warn)"/>
+      <text class="edge-label warn" x="362" y="160">review again</text>
+      <path class="edge ok" d="M554 235 H616" marker-end="url(#arr-ok)"/>
+      <text class="edge-label ok" x="562" y="226">approve</text>
+      <path class="edge" d="M668 204 V112" marker-end="url(#arr)"/>
+    </svg>
+    </div>
+    <figcaption>New commits reset an earlier approval, so the lead always approves the final version. All review comments must be resolved before merging.</figcaption>
+  </figure>
+
+  <h2 id="browser">Add a skill in the browser</h2>
+  <p>No installs needed. Everything happens on github.com.</p>
+  <ol>
+    <li>Open your department's repository from the table above.</li>
+    <li>Click <strong>Add file → Create new file</strong>.</li>
+    <li>In the name field, type <code>your-skill-name/SKILL.md</code>. Typing the <code>/</code> creates the folder.</li>
+    <li>Paste the <a href="#template">template below</a> and fill it in.</li>
+    <li>Click <strong>Commit changes…</strong>, choose <strong>Create a new branch for this commit and start a pull request</strong>, and click <strong>Propose changes</strong>.</li>
+    <li>Optional: add an icon. On your new branch, open the skill folder, click <strong>Add file → Upload files</strong>, upload <code>icon.svg</code> or <code>icon.png</code>, and commit to the same branch.</li>
+    <li>Click <strong>Create pull request</strong>. Your department's leads are added as reviewers automatically.</li>
+    <li>If the lead asks for changes, open the file on your branch, edit it with the pencil icon, and commit to the same branch. The pull request updates by itself.</li>
+  </ol>
+  <p>To <strong>improve an existing skill</strong>, open its <code>SKILL.md</code>, click the pencil icon, and continue from step 5.</p>
+
+  <h3 id="template">SKILL.md template</h3>
+<pre><code>---
+name: your-skill-name
+description: What the skill does, and when Claude should use it. For example: "Use when the user asks to …".
+---
+
+# Your Skill Name
+
+What Claude should do, step by step.
+
+## Rules
+- …
+
+## Example
+**User:** …
+**Claude:** …</code></pre>
+
+  <div class="callout"><p><strong>Try it before you submit.</strong> Zip your skill folder, upload it under <strong>Customize → Skills</strong> in Claude, and test it on a few real requests.</p></div>
+
+  <h2 id="claude-code">Add a skill with Claude Code</h2>
+  <p>If you use Claude Code, you can ask it to do the whole thing, for example: <em>"Create a skill called meeting-notes in the skills-sales repo of {{ORG}} and open a pull request."</em> Or by hand:</p>
+<pre><code>gh repo clone {{ORG}}/skills-sales
+cd skills-sales
+git switch -c add-meeting-notes
+mkdir meeting-notes        # then write meeting-notes/SKILL.md
+git add meeting-notes
+git commit -m "feat: add meeting-notes skill"
+git push -u origin add-meeting-notes
+gh pr create --fill</code></pre>
+
+  <h2 id="good-skill">Writing a good skill</h2>
+  <ul>
+    <li><strong>Folder name = skill name:</strong> lowercase letters, numbers and hyphens, like <code>invoice-checker</code>. The file is always <code>SKILL.md</code>.</li>
+    <li><strong>The description does the work.</strong> Claude reads it to decide when to use the skill, and this site shows it on the card. Say <em>what</em> it does and <em>when</em> to use it.</li>
+    <li><strong>Keep it short and concrete.</strong> Steps, rules and one or two examples beat long explanations.</li>
+    <li><strong>Tell Claude what not to guess.</strong> If a skill depends on company facts like prices, policies or names, say where they come from, or have Claude ask.</li>
+    <li><strong>These repositories are public.</strong> Never put client names, internal numbers, passwords or personal data in a skill.</li>
+  </ul>
+
+  <h2 id="leads">For leads: reviewing</h2>
+  <p>You're asked to review automatically whenever someone opens a pull request in your department's repository. Find everything waiting for you at <a href="https://github.com/pulls/review-requested">github.com/pulls/review-requested</a>.</p>
+  <ol>
+    <li>Open the pull request and go to <strong>Files changed</strong>.</li>
+    <li>Click a line to comment on it, or suggest an exact rewrite with the <strong>±</strong> suggestion button.</li>
+    <li>Click <strong>Review changes</strong> and choose <strong>Approve</strong> or <strong>Request changes</strong>.</li>
+    <li>Once approved and all conversations are resolved, click <strong>Merge pull request</strong>. <strong>Squash and merge</strong> keeps the history tidy.</li>
+  </ol>
+
+  <h3>What to check</h3>
+  <ul>
+    <li>Folder and file follow the naming convention, and <code>name</code> matches the folder.</li>
+    <li>The description clearly says what the skill does and when to use it.</li>
+    <li>The instructions are correct for how your department actually works.</li>
+    <li>Nothing confidential, since the repository is public.</li>
+    <li>It doesn't duplicate an existing skill. Improving the existing one is usually better.</li>
+  </ul>
+
+  <h3>Good to know</h3>
+  <ul>
+    <li>A pull request needs <strong>one approval from a lead</strong> of that department.</li>
+    <li>If new commits are pushed after you approved, your approval is removed and you review again.</li>
+    <li>The most recent push must be approved by someone other than the person who pushed it. So when a lead writes a skill, another lead approves it.</li>
+    <li>Changes to the review rules in <code>.github/</code> need management leads or an admin.</li>
+  </ul>
+</main>
+</body>
+</html>
