@@ -55,8 +55,8 @@
       <p>Is asked to review automatically, gives feedback, approves and merges.</p>
     </div>
     <div class="role">
-      <h3>Management leads &amp; admin</h3>
-      <p>Own the review rules themselves (the <code>.github/</code> folder) and the shared library.</p>
+      <h3>Admin</h3>
+      <p>Can approve anywhere, and is the only team that can change the review rules (the <code>.github/</code> folder).</p>
     </div>
   </div>
 
@@ -69,10 +69,10 @@
       <tr><td>Office</td><td><a href="https://github.com/{{ORG}}/skills-office">skills-office</a></td><td><code>office</code></td><td><code>office-leads</code></td></tr>
       <tr><td>Operations</td><td><a href="https://github.com/{{ORG}}/skills-operations">skills-operations</a></td><td><code>operations</code></td><td><code>operations-lead</code></td></tr>
       <tr><td>Sales</td><td><a href="https://github.com/{{ORG}}/skills-sales">skills-sales</a></td><td><code>sales</code></td><td><code>sales-leads</code></td></tr>
-      <tr><td>Shared</td><td><a href="https://github.com/{{ORG}}/claude-skill-library">claude-skill-library</a></td><td>all departments</td><td><code>admin</code></td></tr>
+      <tr><td>Shared</td><td><a href="https://github.com/{{ORG}}/claude-skill-library">claude-skill-library</a></td><td>all departments</td><td>any leads team, or <code>admin</code></td></tr>
     </tbody>
   </table>
-  <p class="muted">Not in a team yet? Ask your department lead or an admin to add you.</p>
+  <p class="muted">Admins can approve in every repository. Not in a team yet? Ask your department lead or an admin to add you.</p>
 
   <h2 id="flow">The review flow</h2>
   <p>Nobody can change <code>main</code> directly. Every change goes through a pull request that a lead of that department approves.</p>
@@ -211,10 +211,10 @@ gh pr create --fill</code></pre>
 
   <h3>Good to know</h3>
   <ul>
-    <li>A pull request needs <strong>one approval from a lead</strong> of that department.</li>
+    <li>A pull request needs <strong>one approval from a lead</strong> of that department or an admin. In the shared library, a lead from any department can approve.</li>
     <li>If new commits are pushed after you approved, your approval is removed and you review again.</li>
     <li>The most recent push must be approved by someone other than the person who pushed it. So when a lead writes a skill, another lead approves it.</li>
-    <li>Changes to the review rules in <code>.github/</code> need management leads or an admin.</li>
+    <li>Changes to the review rules in <code>.github/</code> need an admin.</li>
   </ul>
 </main>
 </body>
