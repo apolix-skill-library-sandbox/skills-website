@@ -206,6 +206,15 @@ gh pr create --fill</code></pre>
     <li>Once approved and all conversations are resolved, click <strong>Merge pull request</strong>. <strong>Squash and merge</strong> keeps the history tidy.</li>
   </ol>
 
+  <h3 id="notifications">Get an email for every new pull request</h3>
+  <p>Every lead of the department gets a review request for each new pull request. GitHub can send it to your Apolix Outlook, with a link straight to the pull request. Set this up once:</p>
+  <ol>
+    <li>Open <a href="https://github.com/settings/notifications">github.com/settings/notifications</a>.</li>
+    <li>Under <strong>Participating, @mentions and custom</strong>, make sure <strong>Email</strong> is ticked.</li>
+    <li>Under <strong>Default notifications email</strong> or <strong>Custom routing</strong>, choose your <strong>@apolix.nl</strong> address for the <code>{{ORG}}</code> organization. If it isn't listed, add it first under <a href="https://github.com/settings/emails">Settings → Emails</a> and confirm it.</li>
+  </ol>
+  <div class="callout"><p>The email says <em>"… requested your review on …"</em>. If you'd rather not get them, untick Email in step 2. You'll still see open requests at <a href="https://github.com/pulls/review-requested">github.com/pulls/review-requested</a>.</p></div>
+
   <h3>What to check</h3>
   <ul>
     <li>Folder and file follow the naming convention, and <code>name</code> matches the folder.</li>
