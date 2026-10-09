@@ -7,6 +7,9 @@
 <meta name="description" content="How to add or change a Claude skill, and how department leads review it.">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="style.css">
 <style>
   .flow .lane { fill: var(--chip); }
@@ -28,10 +31,12 @@
 </style>
 </head>
 <body>
-<header class="wrap">
+<header class="hero">
+  <div class="wrap narrow">
   <nav class="nav"><a href="./">Skills</a><a href="contribute.html" aria-current="page">How to contribute</a></nav>
-  <h1>Contribute a skill</h1>
+  <div class="brand"><img src="favicon.png" alt="Apolix"><h1>Contribute a skill</h1></div>
   <p class="lede">Anyone in a department can add or improve that department's skills. A lead from the same department reviews every change before it goes live.</p>
+  </div>
 </header>
 
 <main class="wrap doc">
@@ -61,7 +66,7 @@
     </div>
   </div>
 
-  <table class="teams">
+  <div class="table-scroll"><table class="teams">
     <thead><tr><th>Department</th><th>Repository</th><th>Members</th><th>Reviewers</th></tr></thead>
     <tbody>
       <tr><td>Finance</td><td><a href="https://github.com/{{ORG}}/skills-finance">skills-finance</a></td><td><code>finance</code></td><td><code>finance-leads</code></td></tr>
@@ -72,7 +77,7 @@
       <tr><td>Sales</td><td><a href="https://github.com/{{ORG}}/skills-sales">skills-sales</a></td><td><code>sales</code></td><td><code>sales-leads</code></td></tr>
       <tr><td>Shared</td><td><a href="https://github.com/{{ORG}}/claude-skill-library">claude-skill-library</a></td><td>all departments</td><td>any leads team, or <code>admin</code></td></tr>
     </tbody>
-  </table>
+  </table></div>
   <p class="muted">Admins can approve in every repository. Not in a team yet? Ask your department lead or an admin to add you.</p>
 
   <h2 id="flow">The review flow</h2>
