@@ -223,5 +223,25 @@ gh pr create --fill</code></pre>
     <li>Changes to the review rules in <code>.github/</code> need an admin.</li>
   </ul>
 </main>
+<script>
+// Copy button on every code block, shown on hover.
+for (const pre of document.querySelectorAll('.doc pre')) {
+  const box = document.createElement('div');
+  box.className = 'codeblock';
+  pre.replaceWith(box);
+  box.appendChild(pre);
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.type = 'button';
+  btn.textContent = 'Copy';
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(pre.innerText.replace(/\n$/, '')).then(() => {
+      btn.textContent = 'Copied';
+      setTimeout(() => btn.textContent = 'Copy', 1500);
+    });
+  });
+  box.appendChild(btn);
+}
+</script>
 </body>
 </html>
