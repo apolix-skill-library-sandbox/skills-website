@@ -186,6 +186,13 @@ h1 { font-size: 34px; line-height: 1.15; margin: 0; font-weight: 700; letter-spa
 .btn.primary { background: var(--primary); border-color: var(--primary); color: var(--primary-text); }
 .btn.primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
 .btn svg { width: 16px; height: 16px; }
+/* "Use in Claude" keeps Claude's orange (the original site accent) */
+.btn.claude { --claude: #c4623f; --claude-hover: #b0552f; --claude-text: #ffffff; }
+@media (prefers-color-scheme: dark) {
+  .btn.claude { --claude: #e07a55; --claude-hover: #ea8c69; --claude-text: #1a0f0a; }
+}
+.btn.claude { background: var(--claude); border-color: var(--claude); color: var(--claude-text); }
+.btn.claude:hover { background: var(--claude-hover); border-color: var(--claude-hover); }
 .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 48px 0; }
 
 /* "Use in Claude" dialog */

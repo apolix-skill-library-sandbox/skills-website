@@ -79,7 +79,7 @@ function renderGrid() {
       </div>
       <p class="desc">${esc(s.description) || '<em>No description yet.</em>'}</p>
       <div class="actions">
-        <button class="btn primary" data-use="${skills.indexOf(s)}">${SPARK_ICON}Use in Claude</button>
+        <button class="btn primary claude" data-use="${skills.indexOf(s)}">${SPARK_ICON}Use in Claude</button>
         <a class="btn" href="${esc(s.github_url)}" target="_blank" rel="noopener">${GH_ICON}GitHub</a>
       </div>
     </article>`).join('')
