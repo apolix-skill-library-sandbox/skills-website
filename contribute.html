@@ -30,7 +30,7 @@
 <header class="wrap">
   <nav class="nav"><a href="./">Skills</a><a href="contribute.html" aria-current="page">How to contribute</a></nav>
   <h1>Contribute a skill</h1>
-  <p class="lede">Anyone in a department can add or improve that department's skills. A lead from the same department reviews every change before it goes live.</p>
+  <p class="lede">Anyone in a department can add or improve that department's skills. A lead from the same department, or a management lead, reviews every change before it goes live.</p>
 </header>
 
 <main class="wrap doc">
@@ -56,7 +56,7 @@
     </div>
     <div class="role">
       <h3>Management leads &amp; admin</h3>
-      <p>Own the review rules themselves (the <code>.github/</code> folder) and the shared library.</p>
+      <p>Management leads can approve in every department. Together with admin they own the review rules (the <code>.github/</code> folder); admin also reviews the shared library.</p>
     </div>
   </div>
 
@@ -72,10 +72,10 @@
       <tr><td>Shared</td><td><a href="https://github.com/{{ORG}}/claude-skill-library">claude-skill-library</a></td><td>all departments</td><td><code>admin</code></td></tr>
     </tbody>
   </table>
-  <p class="muted">Not in a team yet? Ask your department lead or an admin to add you.</p>
+  <p class="muted">Management leads (<code>management-leads</code>) can also approve in every department. Not in a team yet? Ask your department lead or an admin to add you.</p>
 
   <h2 id="flow">The review flow</h2>
-  <p>Nobody can change <code>main</code> directly. Every change goes through a pull request that a lead of that department approves.</p>
+  <p>Nobody can change <code>main</code> directly. Every change goes through a pull request that a lead of that department, or a management lead, approves.</p>
 
   <figure class="figure">
     <div class="scroll">
@@ -211,7 +211,7 @@ gh pr create --fill</code></pre>
 
   <h3>Good to know</h3>
   <ul>
-    <li>A pull request needs <strong>one approval from a lead</strong> of that department.</li>
+    <li>A pull request needs <strong>one approval</strong>, either from a lead of that department or from a management lead.</li>
     <li>If new commits are pushed after you approved, your approval is removed and you review again.</li>
     <li>The most recent push must be approved by someone other than the person who pushed it. So when a lead writes a skill, another lead approves it.</li>
     <li>Changes to the review rules in <code>.github/</code> need management leads or an admin.</li>
