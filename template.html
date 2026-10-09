@@ -147,7 +147,7 @@ const { org, skills } = JSON.parse(document.getElementById('data').textContent);
 const grid = document.querySelector('.grid');
 const chips = document.querySelector('.chips');
 const search = document.querySelector('.search');
-let activeDept = 'All';
+const activeDepts = new Set(); // empty = all departments
 
 const PALETTE = ['#c4623f', '#3f7cc4', '#3f9c6d', '#8a5cc4', '#c49a3f', '#c43f6e', '#3fa8b0'];
 const depts = [...new Set(skills.map(s => s.department))].sort();
@@ -163,14 +163,14 @@ function renderChips() {
   const counts = { All: skills.length };
   skills.forEach(s => counts[s.department] = (counts[s.department] || 0) + 1);
   chips.innerHTML = ['All', ...depts].map(d =>
-    `<button class="chip" aria-pressed="${d === activeDept}" data-dept="${esc(d)}">${esc(d)}<span class="n">${counts[d]}</span></button>`
+    `<button class="chip" aria-pressed="${d === 'All' ? activeDepts.size === 0 : activeDepts.has(d)}" data-dept="${esc(d)}">${esc(d)}<span class="n">${counts[d]}</span></button>`
   ).join('');
 }
 
 function renderGrid() {
   const q = search.value.trim().toLowerCase();
   const shown = skills.filter(s =>
-    (activeDept === 'All' || s.department === activeDept) &&
+    (activeDepts.size === 0 || activeDepts.has(s.department)) &&
     (!q || [s.title, s.name, s.description, s.department].join(' ').toLowerCase().includes(q))
   );
   grid.innerHTML = shown.length ? shown.map((s, i) => `
@@ -229,7 +229,10 @@ const USE_DIALOG = s => {
 chips.addEventListener('click', e => {
   const b = e.target.closest('[data-dept]');
   if (!b) return;
-  activeDept = b.dataset.dept;
+  const d = b.dataset.dept;
+  if (d === 'All') activeDepts.clear();
+  else if (!activeDepts.delete(d)) activeDepts.add(d);
+  if (activeDepts.size === depts.length) activeDepts.clear();
   renderChips(); renderGrid();
 });
 search.addEventListener('input', renderGrid);
