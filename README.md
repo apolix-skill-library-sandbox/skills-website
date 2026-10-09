@@ -12,7 +12,7 @@ A catalog of every Claude skill in the [apolix-skill-library-sandbox](https://gi
 - `zips/<skill>.zip`: the skill packaged for upload to claude.ai
 - `skills.json`: the same data, machine-readable
 
-The site runs locally (see below). A GitHub Pages workflow is included in `.github/workflows/deploy.yml` but is currently disabled; re-enable it under *Actions* and turn on Pages to host the site again.
+`.github/workflows/deploy.yml` builds the site and deploys it to the Azure Static Web App **ApolixInternalHub** (resource group *Internal*) on every push, every 30 minutes, and on demand. It needs the repo secret `AZURE_STATIC_WEB_APPS_API_TOKEN` (the Static Web App's deployment token).
 
 ## Adding a skill
 
