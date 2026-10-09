@@ -190,7 +190,8 @@ def render(skills):
     (DIST / "index.html").write_text(page, encoding="utf-8")
     contribute = (ROOT / "contribute.html").read_text(encoding="utf-8")
     (DIST / "contribute.html").write_text(contribute.replace("{{ORG}}", html.escape(ORG)), encoding="utf-8")
-    shutil.copy(ROOT / "style.css", DIST / "style.css")
+    for asset in ("style.css", "favicon.png"):
+        shutil.copy(ROOT / asset, DIST / asset)
     (DIST / "skills.json").write_text(json.dumps(skills, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
