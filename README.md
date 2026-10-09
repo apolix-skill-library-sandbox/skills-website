@@ -39,3 +39,31 @@ Python 3.9+ with no dependencies.
 ```
 
 `serve.sh` uses your `gh` login to avoid GitHub's rate limit. Stop it with Ctrl+C.
+
+## PR email notifications
+
+`.github/workflows/notify-leads.yml` emails a repo's leads through Outlook (Microsoft Graph) when a pull request is opened, reopened or marked ready for review. Each skill repo calls it from `.github/workflows/notify-leads.yml`:
+
+```yaml
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review]
+jobs:
+  notify:
+    uses: apolix-skill-library-sandbox/skills-website/.github/workflows/notify-leads.yml@main
+    secrets: inherit
+```
+
+It needs five **organization secrets** (Settings → Secrets and variables → Actions), shared with the skill repos. Until they exist, the workflow skips without failing.
+
+| Secret | Value |
+|---|---|
+| `MAIL_TENANT_ID` | Apolix Entra ID tenant ID |
+| `MAIL_CLIENT_ID` | App registration's client ID |
+| `MAIL_CLIENT_SECRET` | App registration's client secret |
+| `MAIL_SENDER` | Mailbox the mail is sent from, e.g. `skills@apolix.nl` |
+| `LEAD_EMAILS` | JSON: repo → lead addresses, e.g. `{"skills-sales": ["a@apolix.nl"]}` |
+
+The app registration needs the **Mail.Send** application permission with admin consent, ideally limited to the sender mailbox with an Exchange application access policy.
+
+The workflow never checks out or runs code from the pull request; PR text is only HTML-escaped into the email.

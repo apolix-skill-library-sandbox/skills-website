@@ -1,0 +1,93 @@
+# Emails the department's leads (via Microsoft Graph / Outlook) when a pull request opens.
+# Called from each skill repo by a small workflow; see README.md "PR email notifications".
+name: Notify leads
+
+on:
+  workflow_call:
+    secrets:
+      MAIL_TENANT_ID:
+        required: false
+      MAIL_CLIENT_ID:
+        required: false
+      MAIL_CLIENT_SECRET:
+        required: false
+      MAIL_SENDER:
+        required: false
+      LEAD_EMAILS:
+        required: false
+
+permissions: {}
+
+jobs:
+  email:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send email to leads
+        env:
+          TENANT_ID: ${{ secrets.MAIL_TENANT_ID }}
+          CLIENT_ID: ${{ secrets.MAIL_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.MAIL_CLIENT_SECRET }}
+          SENDER: ${{ secrets.MAIL_SENDER }}
+          LEAD_EMAILS: ${{ secrets.LEAD_EMAILS }}
+          REPO: ${{ github.event.repository.name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          python3 - <<'PY'
+          import html, json, os, sys, urllib.parse, urllib.request
+
+          env = os.environ
+          missing = [k for k in ("TENANT_ID", "CLIENT_ID", "CLIENT_SECRET", "SENDER", "LEAD_EMAILS") if not env.get(k)]
+          if missing:
+              print("::notice::Email not configured yet (missing %s), skipping." % ", ".join(missing))
+              sys.exit(0)
+
+          repo = env["REPO"]
+          recipients = json.loads(env["LEAD_EMAILS"]).get(repo, [])
+          if not recipients:
+              print("::notice::No lead emails configured for %s, skipping." % repo)
+              sys.exit(0)
+
+          # 1. App-only token for Microsoft Graph
+          form = urllib.parse.urlencode({
+              "client_id": env["CLIENT_ID"],
+              "client_secret": env["CLIENT_SECRET"],
+              "scope": "https://graph.microsoft.com/.default",
+              "grant_type": "client_credentials",
+          }).encode()
+          token_url = "https://login.microsoftonline.com/%s/oauth2/v2.0/token" % env["TENANT_ID"]
+          with urllib.request.urlopen(urllib.request.Request(token_url, data=form)) as r:
+              token = json.load(r)["access_token"]
+
+          # 2. The email (everything from the PR is escaped)
+          e = lambda k: html.escape(env.get(k) or "")
+          body = (e("PR_BODY")[:1500] or "<em>No description.</em>").replace("\n", "<br>")
+          content = f"""
+          <div style="font-family:Segoe UI,Arial,sans-serif;color:#0b2545;max-width:560px">
+            <p style="font-size:13px;color:#52657d;margin:0 0 4px">Apolix Skill Library &middot; {e("REPO")}</p>
+            <h2 style="margin:0 0 12px;font-size:20px">{e("PR_TITLE")}</h2>
+            <p style="margin:0 0 16px"><strong>@{e("PR_AUTHOR")}</strong> opened a pull request and asked for your review.</p>
+            <div style="background:#f1f6f9;border-radius:10px;padding:12px 14px;margin:0 0 20px;font-size:14px;color:#52657d">{body}</div>
+            <a href="{e("PR_URL")}" style="display:inline-block;background:#0b2545;color:#ffffff;text-decoration:none;padding:10px 18px;border-radius:10px;font-weight:600">Review pull request #{e("PR_NUMBER")}</a>
+            <p style="font-size:12px;color:#52657d;margin:20px 0 0">All your open review requests: <a href="https://github.com/pulls/review-requested" style="color:#496ddb">github.com/pulls/review-requested</a></p>
+          </div>"""
+          message = {
+              "message": {
+                  "subject": "[%s] Review requested: %s" % (repo, env["PR_TITLE"]),
+                  "body": {"contentType": "HTML", "content": content},
+                  "toRecipients": [{"emailAddress": {"address": a}} for a in recipients],
+              },
+              "saveToSentItems": False,
+          }
+
+          # 3. Send as the shared mailbox
+          send_url = "https://graph.microsoft.com/v1.0/users/%s/sendMail" % urllib.parse.quote(env["SENDER"])
+          req = urllib.request.Request(send_url, data=json.dumps(message).encode(), method="POST",
+                                       headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+          with urllib.request.urlopen(req) as r:
+              print("Sent to %d lead(s), Graph status %s" % (len(recipients), r.status))
+          PY
