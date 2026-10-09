@@ -12,6 +12,7 @@ Standard library only, Python 3.9+.
 """
 
 import argparse
+import hashlib
 import html
 import json
 import os
@@ -186,12 +187,20 @@ def render(skills):
     data = json.dumps({"org": ORG, "skills": skills}, ensure_ascii=False)
     # Keep "</script>" inside descriptions from closing the data block.
     data = data.replace("</", "<\\/")
-    page = template.replace("{{ORG}}", html.escape(ORG)).replace("{{DATA}}", data)
-    (DIST / "index.html").write_text(page, encoding="utf-8")
-    contribute = (ROOT / "contribute.html").read_text(encoding="utf-8")
-    (DIST / "contribute.html").write_text(contribute.replace("{{ORG}}", html.escape(ORG)), encoding="utf-8")
+    pages = {
+        "index.html": template.replace("{{DATA}}", data),
+        "contribute.html": (ROOT / "contribute.html").read_text(encoding="utf-8"),
+    }
+    # Version shared assets by content so browsers don't keep a stale copy after a redesign.
+    versions = {}
     for asset in ("style.css", "favicon.png"):
         shutil.copy(ROOT / asset, DIST / asset)
+        versions[asset] = hashlib.sha256((ROOT / asset).read_bytes()).hexdigest()[:8]
+    for name, page in pages.items():
+        page = page.replace("{{ORG}}", html.escape(ORG))
+        for asset, version in versions.items():
+            page = page.replace('"%s"' % asset, '"%s?v=%s"' % (asset, version))
+        (DIST / name).write_text(page, encoding="utf-8")
     (DIST / "skills.json").write_text(json.dumps(skills, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
