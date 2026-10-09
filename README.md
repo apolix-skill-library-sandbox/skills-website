@@ -12,7 +12,7 @@ A catalog of every Claude skill in the [apolix-skill-library-sandbox](https://gi
 - `zips/<skill>.zip`: the skill packaged for upload to claude.ai
 - `skills.json`: the same data, machine-readable
 
-A GitHub Action rebuilds and deploys to GitHub Pages on every push, every 30 minutes, and on demand.
+The site runs locally (see below). A GitHub Pages workflow is included in `.github/workflows/deploy.yml` but is currently disabled; re-enable it under *Actions* and turn on Pages to host the site again.
 
 ## Adding a skill
 
@@ -34,7 +34,8 @@ To skip step 1 for everyone, an org owner can provision the skills org-wide unde
 Python 3.9+ with no dependencies.
 
 ```bash
-python3 build.py --local ../skills     # local clones, one folder per repo
-GITHUB_TOKEN=$(gh auth token) python3 build.py   # live from GitHub
-python3 -m http.server 8765 --directory dist
+./serve.sh            # latest skills from GitHub, then serve on http://localhost:8765
+./serve.sh --local    # use the local clones in ../skills instead
 ```
+
+`serve.sh` uses your `gh` login to avoid GitHub's rate limit. Stop it with Ctrl+C.
